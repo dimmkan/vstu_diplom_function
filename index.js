@@ -474,6 +474,7 @@ const handleMessage = async (data) => {
         params.reqId = `${params.reqId}-data`;
         const result = await fetch.sendPost(taskInfo.methodGetter(data), params);
         checkResult(result);
+        response.message.data = taskInfo.handler(result.message);
     } catch (error) {
         console.log(error);
         utils.error('[Handler] Error:', error.message);
