@@ -1,6 +1,6 @@
 const utils = require('./common/utility');
-const redisSub = require('./common/redis_sub');
 const redis = require('./common/redis_async');
+const redisSub = require('./common/redis_sub');
 const fetch = require('./common/fetch');
 const _ = require('ramda');
 const FILIAL_ID = require('./common/filials_map').filials;
