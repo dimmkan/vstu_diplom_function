@@ -170,7 +170,7 @@ function measureParamBuilder(data) {
         return {
             timeout: 300,
             dn: data.parameters[`${MRF}.customer_dn`],
-            reqId: data.id,
+            reqId: `${data.id}-data`,
             operator: data.user_id,
             filialId: FILIAL_ID[data.region_id]
         }
@@ -178,7 +178,7 @@ function measureParamBuilder(data) {
     else {
         return {
             timeout: 300,
-            reqId: data.id,
+            reqId: `${data.id}-data`,
             operator: data.user_id,
             filialId: FILIAL_ID[data.region_id],
             ...paramDataMapper(data.parameters, measureExtParamsKeys),
@@ -471,7 +471,6 @@ const handleMessage = async (data) => {
         }
 
         const params = taskInfo.paramBuilder(data);
-        params.reqId = `${params.reqId}-data`;
         const result = await fetch.sendPost(taskInfo.methodGetter(data), params);
         checkResult(result);
         response.message.data = taskInfo.handler(result.message);
