@@ -280,8 +280,7 @@ function xponMeasureHandler(data) {
             ont_state: {
                 status_adm: data.admStatus.toUpperCase() ?? '',
                 status_oper: data.operStatus.toUpperCase(),
-                ...Object
-                    .entries(xponData).reduce((acc, [key, value]) => {
+                ...Object.entries(xponData).reduce((acc, [key, value]) => {
                         digitFields = ['ont_distance', 'ont_rssi', 'ont_power_rx', 'ont_power_tx'];
                         acc[key] = digitFields.includes(key) ? Number(value.replace(',', '.')) : value.toUpperCase();
                         return acc;
