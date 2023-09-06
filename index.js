@@ -148,17 +148,14 @@ const ipAddrDataParser = (ipAddrString) => ipAddrString.split(/:\-|:\*/g).reduce
 })
 
 const dataMapper = (dataObject, mappingKeys, omitFieldsArray = []) => Object
-    .entries(_.omit(omitFieldsArray, dataObject))
-    .reduce((acc, [key, value]) => {
+    .entries(_.omit(omitFieldsArray, dataObject)).reduce((acc, [key, value]) => {
         if (!mappingKeys[key]) return acc;
         acc[mappingKeys[key]] = value;
         return acc;
     }, {});
 
 const paramDataMapper = (dataObject, mappingKeys, omitFieldsArray = []) => Object
-    .entries(_.omit(omitFieldsArray, dataObject))
-    .filter(([key, value]) => !!value)
-    .reduce((acc, [key, value]) => {
+    .entries(_.omit(omitFieldsArray, dataObject)).filter(([_, value]) => !!value).reduce((acc, [key, value]) => {
         if (!mappingKeys[key]) return acc;
         acc[mappingKeys[key]] = value;
         return acc;
@@ -284,8 +281,7 @@ function xponMeasureHandler(data) {
                 status_adm: data.admStatus.toUpperCase() ?? '',
                 status_oper: data.operStatus.toUpperCase(),
                 ...Object
-                    .entries(xponData)
-                    .reduce((acc, [key, value]) => {
+                    .entries(xponData).reduce((acc, [key, value]) => {
                         digitFields = ['ont_distance', 'ont_rssi', 'ont_power_rx', 'ont_power_tx'];
                         acc[key] = digitFields.includes(key) ? Number(value.replace(',', '.')) : value.toUpperCase();
                         return acc;
@@ -302,12 +298,10 @@ function xponMeasureHandler(data) {
                     vlan: 'vlan',
                 }))
                 .map((item) => Object
-                    .entries(item)
-                    .reduce((acc, [key, value]) => {
+                    .entries(item).reduce((acc, [key, value]) => {
                         acc[key] = key !== 'service_port_status' ? Number(value) : value.toUpperCase();
                         return acc;
-                    }, {}))
-                .reduce((acc, item) => {
+                    }, {})).reduce((acc, item) => {
                     Object.entries(item).forEach(([key, value]) => {
                         if (acc[key]) acc[key].push(value);
                         else acc[key] = [value];
@@ -323,12 +317,10 @@ function xponMeasureHandler(data) {
                     status: "port_status",
                 }))
                 .map((item) => Object
-                    .entries(item)
-                    .reduce((acc, [key, value]) => {
+                    .entries(item).reduce((acc, [key, value]) => {
                         acc[key] = key === 'port_speed' || key === 'port_number' ? Number(value) : value.toUpperCase();
                         return acc;
-                    }, {}))
-                .reduce((acc, item) => {
+                    }, {})).reduce((acc, item) => {
                     Object.entries(item).forEach(([key, value]) => {
                         if (acc[key]) acc[key].push(value);
                         else acc[key] = [value];
@@ -361,48 +353,38 @@ function xdslMeasureHandler(data) {
             interface_status: {
                 status_adm: data.admStatus.toUpperCase() ?? '',
                 status_oper: data.operStatus.toUpperCase(),
-                ...Object
-                    .entries(interfaceStatusData)
-                    .reduce((acc, [key, value]) => {
+                ...Object.entries(interfaceStatusData).reduce((acc, [key, value]) => {
                         acc[key] = key === 'uptime' ? Number(value.replace(',', '.')) : value.toUpperCase();
                         return acc;
                     }, {}),
             },
             line_status: {
                 ...Object
-                    .entries(lineStatusData)
-                    .reduce((acc, [key, value]) => {
+                    .entries(lineStatusData).reduce((acc, [key, value]) => {
                         value = value.replace(',', '.');
-                        acc[key] = !infoFields.includes(key)
-                            ? speedFields.includes(key)
-                                ? Number((Number(value) / 1000000).toFixed(2)) : Number(value) : value.toUpperCase();
+                        acc[key] = !infoFields.includes(key) ? speedFields.includes(key) ? Number((Number(value) / 1000000).toFixed(2)) : Number(value) : value.toUpperCase();
                         return acc;
                     }, {}),
             },
             port_mac: {
                 mac_address: data.mac,
             },
-            pvc: data.xdslData.pvc
-                .map((item) => Object
-                    .entries(item)
-                    .reduce((acc, [key, value]) => {
+            pvc: data.xdslData.pvc.map((item) => Object
+                    .entries(item).reduce((acc, [key, value]) => {
                         acc[key] = Number(value) || Number(value) === 0 ? Number(value) : value;
                         return acc;
-                    }, {}))
-                .reduce((acc, item) => {
+                    }, {})).reduce((acc, item) => {
                     Object.entries(item).forEach(([key, value]) => {
                         if (acc[key]) acc[key].push(value);
                         else acc[key] = [value];
                     });
                     return acc;
                 }, {}),
-            modem: Object
-                .entries(dataMapper(data.xdslData.modem, {
+            modem: Object.entries(dataMapper(data.xdslData.modem, {
                     vendorId: "vendor",
                     versionNumber: "version",
                     serialNumber: "serial_number",
-                }))
-                .reduce((acc, [key, value]) => {
+                })).reduce((acc, [key, value]) => {
                     if (acc[key]) acc[key].push(value.toUpperCase());
                     else acc[key] = [value.toUpperCase()];
                     return acc;
