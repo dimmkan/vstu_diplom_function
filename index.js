@@ -455,6 +455,7 @@ const handleMessage = async (data) => {
         const result = await fetch.sendPost(taskInfo.methodGetter(data), params);
         checkResult(result);
         response.message.data = taskInfo.handler(result.message);
+        response.message.action = data.task;
     } catch (error) {
         console.log(error);
         utils.error('[Handler] Error:', error.message);
