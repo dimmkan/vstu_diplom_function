@@ -124,7 +124,6 @@ const ipAddrDataParser = (ipAddrString) => ipAddrString.split(/:\-|:\*/g).reduce
     if (index === 1) {
         const portAndOntDataArray = currentValue.split(' ');
         const portString = portAndOntDataArray[0];
-
         const portDataArray = portString.split('/').filter(item => !!item);
         if (portDataArray.length === 1) acc.port = parseInt(portDataArray[0]) || null;
         if (portDataArray.length === 2) {
@@ -171,8 +170,7 @@ function measureParamBuilder(data) {
             operator: data.user_id,
             filialId: FILIAL_ID[data.region_id]
         }
-    }
-    else {
+    } else {
         return {
             timeout: 300,
             reqId: `${data.id}-data`,
@@ -202,9 +200,7 @@ function fttxMeasureHandler(data) {
             interface_status: {
                 status_adm: data.admStatus.toUpperCase() ?? '',
                 status_oper: data.operStatus.toUpperCase(),
-                ...Object
-                    .entries(interfaceStatusData)
-                    .reduce((acc, [key, value]) => {
+                ...Object.entries(interfaceStatusData).reduce((acc, [key, value]) => {
                         acc[key] = Number(value) || Number(value) === 0 ? key === 'speed' ? Number((Number(value) / 1000000).toFixed(2)) : Number(value) : value.toUpperCase();
                         return acc;
                     }, {}),
@@ -246,9 +242,7 @@ function fttxMeasureHandler(data) {
                 mac_address: data.mac,
             },
             port_vlan: data.fttxData.sRules
-                .map((item) => Object
-                    .entries(item)
-                    .reduce((acc, [key, value]) => {
+                .map((item) => Object.entries(item).reduce((acc, [key, value]) => {
                         acc[key] = Number(value) || Number(value) === 0 ? Number(value) : value.toUpperCase();
                         return acc;
                     }, {}))
@@ -358,8 +352,7 @@ function xdslMeasureHandler(data) {
                     }, {}),
             },
             line_status: {
-                ...Object
-                    .entries(lineStatusData).reduce((acc, [key, value]) => {
+                ...Object.entries(lineStatusData).reduce((acc, [key, value]) => {
                         value = value.replace(',', '.');
                         acc[key] = !infoFields.includes(key) ? speedFields.includes(key) ? Number((Number(value) / 1000000).toFixed(2)) : Number(value) : value.toUpperCase();
                         return acc;
@@ -368,8 +361,7 @@ function xdslMeasureHandler(data) {
             port_mac: {
                 mac_address: data.mac,
             },
-            pvc: data.xdslData.pvc.map((item) => Object
-                    .entries(item).reduce((acc, [key, value]) => {
+            pvc: data.xdslData.pvc.map((item) => Object.entries(item).reduce((acc, [key, value]) => {
                         acc[key] = Number(value) || Number(value) === 0 ? Number(value) : value;
                         return acc;
                     }, {})).reduce((acc, item) => {
