@@ -12,9 +12,9 @@ const { dn_validator,
 const redisChannelSrc = 'adapter-functional';
 const redisChannelDst = 'transmitter';
 
-const fttxMeasureTask = 'equipment.measure.fttx';
-const xponMeasureTask = 'equipment.measure.xpon';
-const xdslMeasureTask = 'equipment.measure.xdsl';
+const fttxMeasureTask = 'equipment.measure.fttx.func';
+const xponMeasureTask = 'equipment.measure.xpon.func';
+const xdslMeasureTask = 'equipment.measure.xdsl.func';
 
 const TASKS_INFO = {
     [fttxMeasureTask]: {
