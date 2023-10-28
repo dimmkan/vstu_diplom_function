@@ -466,7 +466,7 @@ async function start() {
         redisSub.quit();
     } else {
         redisSub.subscribe(redisChannelSrc);
-        redisSub.setOnMessage(async (channel, message) => _.compose(
+        redisSub.setOnMessage(async (_, message) => _.compose(
             _.andThen(publisher),
             handleMessage,
             _.tryCatch(JSON.parse, catcher)
